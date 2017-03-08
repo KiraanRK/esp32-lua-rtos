@@ -9,6 +9,8 @@
 #include "luaconf.h"
 #include "lrodefs.h"
 
+#include <stdio.h>
+
 // TO DO: ??
 #define luaS_newro(L, s)  (luaS_newlstr(L, s, strlen(s)))
 
@@ -70,28 +72,20 @@ typedef struct
   const TValue value;
 } luaR_entry;
 
-/* A rotable */
-typedef struct
-{
-  const char *name;
-  const luaR_entry *pentries;
-} luaR_table;
-
 const TValue* luaR_findglobal(const char *key, unsigned len);
 int luaR_findfunction(lua_State *L, const luaR_entry *ptable);
 const TValue* luaR_findentry(const void *pentry, const char *strkey, luaR_numkey numkey, unsigned *ppos);
 void luaR_getcstr(char *dest, const TString *src, size_t maxsize);
 void luaR_next(lua_State *L, void *data, TValue *key, TValue *val);
-void* luaR_getmeta(void *data);
 int luaR_isrotable(const void *p);
 LUA_API void lua_pushrotable (lua_State *L, void *p);
-LUALIB_API int luaL_rometatable (lua_State *L, const char* tname, void *p);
+const TValue *luaL_rometatable(const void *data);
 int luaH_getn_ro (void *t);
 void luaR_next(lua_State *L, void *data, TValue *key, TValue *val);
 int luaH_next_ro (lua_State *L, void *t, StkId key);
 
 int luaR_index(lua_State *L, const void *funcs, const void *consts);
 int luaR_error(lua_State *L);
+LUALIB_API int luaL_newmetarotable (lua_State *L, const char* tname, void *p);
 
 #endif
-
