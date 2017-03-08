@@ -132,7 +132,7 @@ static void sd_wait_ready(int spi, unsigned int limit, unsigned int *maxcount)
 
     spi_transfer(spi, 0xFF, NULL);
     for (i=0; i<limit; i++) {
-        spi_transfer(spi, 0xFF, &reply);
+    	spi_transfer(spi, 0xFF, &reply);
         if (reply == 0xFF) {
             if (*maxcount < i)
                 *maxcount = i;
@@ -250,7 +250,7 @@ static int card_init(int unit)
 {
     int spi = sddrives[unit].spi;
     unsigned int i;
-    int reply;
+    unsigned char reply;
     unsigned char response[4];
     int timeout = 4;
 
@@ -478,13 +478,13 @@ again:
     if (bcount >= SECTSIZE)
     {
         spi_bulk_read32_be(spi, SECTSIZE/4, (int*)data);
-printf("    %08x %08x %08x %08x ...\n",
-((int*)data)[0], ((int*)data)[1], ((int*)data)[2], ((int*)data)[3]);
+// printf("    %08x %08x %08x %08x ...\n",
+// ((int*)data)[0], ((int*)data)[1], ((int*)data)[2], ((int*)data)[3]);
         data += SECTSIZE;
     } else {
         spi_bulk_read(spi, bcount, (unsigned char *)data);
-printf("    %08x %08x %08x %08x ...\n",
-((int*)data)[0], ((int*)data)[1], ((int*)data)[2], ((int*)data)[3]);
+// printf("    %08x %08x %08x %08x ...\n",
+// ((int*)data)[0], ((int*)data)[1], ((int*)data)[2], ((int*)data)[3]);
         data += bcount;
         for (i=bcount; i<SECTSIZE; i++)
             spi_transfer(spi, 0xFF, NULL);
@@ -517,9 +517,9 @@ int
 card_write(int unit, unsigned offset, char *data, unsigned bcount)
 {
     int spi = sddrives[unit].spi;
-    unsigned i;
     unsigned char reply;
-    
+	int i;
+
 //printf("--- %s: unit = %d, blkno = %d, bcount = %d\n", __func__, unit, offset, bcount);
 
     mtx_lock(&sd_mtx);
