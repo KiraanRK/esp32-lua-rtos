@@ -35,6 +35,10 @@
 #include "esp_deep_sleep.h"
 #include "driver/periph_ctrl.h"
 
+#if LUA_USE_TFT
+#include "screen/tftspi.h"
+#endif
+
 #include <esp_spi_flash.h>
 
 #include <vfs.h>
@@ -202,6 +206,12 @@ void _sys_init() {
     #if USE_SPIFFS
     	vfs_spiffs_register();
     #endif
+
+	// Set TFT defaults first, in case using a combined TFT/SD prototype board
+	// with a shared SPI configuration.
+	#if LUA_USE_TFT
+	tft_set_defaults();
+	#endif
 
 	#if USE_FAT
     	vfs_fat_register();
